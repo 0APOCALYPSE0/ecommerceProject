@@ -3,7 +3,7 @@
 	include "includes/head.php";
 	include "includes/navigation.php";
 	include "includes/headerpartial.php";
-	
+
 	if($cart_id != ""){
 		$cartQ = $conn->query("select * from cart where id = '$cart_id';");
 		$result = mysqli_fetch_assoc($cartQ);
@@ -42,7 +42,7 @@
 							if($s[0] == $item["size"]){
 								$available = $s[1];
 							}
-						}						
+						}
 					?>
 			    		<tr>
 			    			<td><?=$i;?></td>
@@ -61,7 +61,7 @@
 			    			<td><?=money($item["quantity"] * $product["price"]);?></td>
 			    		</tr>
 						<?php
-						    $i++; 
+						    $i++;
 						    $item_count += $item["quantity"];
 							$sub_total += ($item["quantity"] * $product["price"]);
 					}
@@ -88,7 +88,7 @@
 						</tr>
 					</tbody>
 				</table>
-				
+
 				<!-- Checkout Button -->
 				<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#checkoutModal" style="margin-top:15px; margin-right:15px;">
 				 <span class="glyphicon glyphicon-shopping-cart"></span> Check Out >>
@@ -129,24 +129,24 @@
 									<div class="form-group col-md-6">
 										<label for="street2">Street Address 2: </label>
 										<input type="text" name="street2" class="form-control" id="street2" data-stripe="address_line2">
-									</div>								
+									</div>
 									<div class="form-group col-md-6">
 										<label for="city">City: </label>
 										<input type="text" name="city" class="form-control" id="city" data-stripe="address_city">
-									</div>	
+									</div>
 									<div class="form-group col-md-6">
 										<label for="state">State: </label>
 										<input type="text" name="state" class="form-control" id="state" data-stripe="address_state">
-									</div>	
+									</div>
 									<div class="form-group col-md-6">
 										<label for="zip_code">Zip Code: </label>
 										<input type="text" name="zip_code" class="form-control" id="zip_code" data-stripe="address_zip">
-									</div>	
+									</div>
 									<div class="form-group col-md-6">
 										<label for="country">Country: </label>
 										<input type="text" name="country" class="form-control" id="country" data-stripe="address_country">
 									</div>
-                                </div>									
+                                </div>
 								<div id="step2" style="display:none">
 								    <div class="form-group col-md-3">
 									    <label for="name">Name on Card: </label>
@@ -166,21 +166,21 @@
 										    <option value=""></option>
 										<?php for($i=1; $i<13; $i++): ?>
 											<option value="<?=$i;?>"><?=$i;?></option>
-										<?php endfor; ?>	
+										<?php endfor; ?>
 										</select>
 									</div>
 									<div class="form-group col-md-2">
 									    <label for="exp-year">Expire Year: </label>
 										<select id="exp-year" class="form-control" data-stripe="exp_year">
-                                            <option value=""></option>										
+                                            <option value=""></option>
 										<?php $y = date("Y"); ?>
 										<?php for($i=0; $i<11; $i++): ?>
 											<option value="<?=$i+$y;?>"><?=$i+$y;?></option>
-										<?php endfor; ?>	
+										<?php endfor; ?>
 										</select>
 									</div>
 								</div>
-						</div>	
+						</div>
 					  </div>
 					  <div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -192,7 +192,7 @@
 					</div>
 				  </div>
 				</div>
-				
+
 			<?php
             if($item_count <= 0){
 		        setcookie(CART_COOKIE, '', 1, "/", $domain, false);
@@ -202,7 +202,7 @@
     </div>
 
 	<script>
-	
+
 	    function back_address(){
 			$("#payment-errors").html("");
 						$("#step1").css("display","block");
@@ -212,7 +212,7 @@
 						$("#check_out_button").css("display","none");
 						$("#checkoutModalLabel").html("Shipping Address");
 		}
-		
+
 	    function check_address(){
 			var data = {
 				"full_name" : $("#full_name").val(),
@@ -225,7 +225,7 @@
 				"country" : $("#country").val(),
 			};
 			$.ajax({
-				url : "/MyPhpFolder/ecommerceProject/admin/parsers/check_address.php",
+				url : "/ecommerceProject/admin/parsers/check_address.php",
 				method : "post",
 				data : data,
 				success : function(data){
@@ -239,17 +239,17 @@
 						$("#checkoutModalLabel").html("Enter Your Card Details");
 					}else{
 						$("#payment-errors").html(data);
-					}			
+					}
 				},
 				error : function(){alert("Something went wrong!");},
 			});
 		}
-		
+
 		Stripe.setPublishableKey('<?=STRIPE_PUBLIC;?>');
-		
+
 		function stripeResponseHandler(status, response){
 			var $form = $("#payment-form");
-			
+
 			if(response.error){
 				// Show the errors on the form
 				$form.find("#payment-errors").text(response.error.message);
@@ -263,21 +263,21 @@
 				$form.get(0).submit();
 			}
 		};
-		
+
 		$(function($) {
 			$("#payment-form").submit(function(event) {
 				var $form = $(this);
-				
+
 				//Disable the submit button to prevent from repeated clicks
 				$form.find("button").prop("disable", true);
-				
+
 				Stripe.card.createToken($form, stripeResponseHandler);
-				
+
 				//Prevent the form from submitting with the default action
 				return false;
 			});
 		});
-		
+
 		/*function stripeTokenHandler(token) {
 		  // Insert the token ID into the form so it gets submitted to the server
 		  var form = document.getElementById('#payment-form');
@@ -290,7 +290,7 @@
 		  // Submit the form
 		  form.submit();
 		}*/
-		
+
 		/*// Create a token or display an error when the form is submitted.
 		var form = document.getElementById('#payment-form');
 		form.addEventListener('submit', function(event) {
@@ -308,8 +308,8 @@
 		  });
 		});*/
 	</script>
-	
+
 <?php
-    
+
     include "includes/footer.php";
 ?>

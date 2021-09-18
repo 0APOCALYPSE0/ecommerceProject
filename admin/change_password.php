@@ -1,7 +1,7 @@
 <?php
-    
+
 	include "includes/header.php";
-	require_once $_SERVER["DOCUMENT_ROOT"]."/MyPhpFolder/ecommerceProject/core/db.php";
+	require_once $_SERVER["DOCUMENT_ROOT"]."/ecommerceProject/core/db.php";
 	if(!is_logged_in()){
 		login_error_redirect();
 	}
@@ -16,11 +16,11 @@
 	$new_hashed = password_hash($password, PASSWORD_DEFAULT);
 	$user_id = $user_data["id"];
 	$errors = array();
-	
+
 ?>
     <style>
 	    body{
-			background-image: url("/MyPhpFolder/ecommerceProject/images/headerlogo/background.png");
+			background-image: url("/ecommerceProject/images/headerlogo/background.png");
 			background-size: 100vw 100vh;
 			background-attachment: fixed;
 		}
@@ -34,22 +34,22 @@
 				if(empty($_POST["old_password"]) || empty($_POST["password"]) || empty($_POST["confirm"])){
 						$errors[] = "You must fill out all field.";
 					}
-					
+
 					//password must more than 6 character...
 					if(strlen($password) < 6){
 						$errors[] = "Password must be atleast 6 characters.";
 					}
-					
+
 					//if new password matches confirm...
 					if($password != $confirm){
 						$errors[] = "The new password and confrim new password does not match!";
 					}
-					
+
 					//password verification...
 					if(!password_verify($old_password, $hashed)){
 						$errors[] = "Your old password does not match our records.";
 					}
-					
+
 					//check errors...
 					if(!empty($errors)){
 						echo display_error($errors);
@@ -81,7 +81,7 @@
 			    <input type="submit" name="submit" value="Login" class="btn btn-primary">
 			</div>
     	</form>
-		<p class="text-right"><a href="/MyPhpFolder/ecommerceProject/index.php" alt="home">Visit Site</a></p>
+		<p class="text-right"><a href="/ecommerceProject/index.php" alt="home">Visit Site</a></p>
     </div>
 
 <?php

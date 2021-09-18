@@ -1,5 +1,5 @@
 <?php
-    require_once $_SERVER["DOCUMENT_ROOT"]."/MyPhpFolder/ecommerceProject/core/db.php";
+    require_once $_SERVER["DOCUMENT_ROOT"]."/ecommerceProject/core/db.php";
 	$product_id = sanitize($_POST["product_id"]);
 	$size = sanitize($_POST["size"]);
 	$available = sanitize($_POST["available"]);
@@ -10,12 +10,12 @@
 		"size"      =>  $size,
 		"quantity"  =>  $quantity,
 	);
-	
+
 	$domain = ($_SERVER["HTTP_HOST"] != "localhost") ? '.'.$_SERVER["HTTP_HOST"] : false;
 	$query = $conn->query("select * from products where id ='$product_id'");
 	$product = mysqli_fetch_assoc($query);
 	$_SESSION["success_flash"] = $product["title"]." was added to your cart.";
-	
+
 	//check if the cart cookies exists.....
 	if($cart_id != ''){
 		$cartQ = $conn->query("select * from cart where id ='$cart_id';");
@@ -46,8 +46,8 @@
 		$items_json = json_encode($item);
 		$cart_expire = date("Y-m-d H:i:s", strtotime("+30 days"));
 		$conn->query("insert into cart (items, expire_date) values ('$items_json', '$cart_expire')");
-		$cart_id = mysqli_insert_id($conn);		
-		
+		$cart_id = mysqli_insert_id($conn);
+
 		setcookie(CART_COOKIE, $cart_id, CART_COOKIE_EXPIRE, "/", $domain, false);
 	}
 ?>

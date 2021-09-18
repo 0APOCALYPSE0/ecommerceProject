@@ -1,18 +1,18 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT']."/MyPhpFolder/ecommerceProject/core/db.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/ecommerceProject/core/db.php";
 	include "includes/header.php";
 	include "includes/navigation.php";
 	if(!is_logged_in()){
 		login_error_redirect();
 	}
-	
+
 	//Back end code ========
 	$sql = "select * from categories where parent =0;";
 	$result = mysqli_query($conn, $sql);
 	$errors = array();
 	$category ="";
 	$parent ="";
-	
+
 		//edit category...
 	if(isset($_GET["edit"]) && !empty($_GET["edit"])){
 		$edit_id = (int)$_GET["edit"];
@@ -20,7 +20,7 @@
 		$edit_sql = "select * from categories where id='$edit_id';";
 		$edit_result = mysqli_query($conn, $edit_sql);
 		$edit_category = mysqli_fetch_assoc($edit_result);
-		
+
 	}
 	//delete category...
 	if(isset($_GET["delete"]) && !empty($_GET["delete"])){
@@ -64,18 +64,18 @@
 					$('#errors').html("<?php echo $display; ?>");
 				});
 			</script>
-		<?php	
+		<?php
 		}else{
 			//update database...
 			$updateSql = "insert into categories (category, parent) values('$category', '$parent');";
 			if(isset($_GET["edit"])){
-			    $updateSql = "update categories set category = '$category', parent = '$parent' where id = '$edit_id' ;";	
+			    $updateSql = "update categories set category = '$category', parent = '$parent' where id = '$edit_id' ;";
 			}
 			$updateResult = mysqli_query($conn, $updateSql);
 			header("Location: categories.php");
 		}
 	}
-	
+
 	$category_value ="";
 	$parent_value = 0;
 	if(isset($_GET["edit"])){
@@ -89,7 +89,7 @@
 ?>
     <h2 class="text-center">Categories</h2><hr>
 	<div class="row" style="margin-left:0px;margin-right:-2px;">
-	 
+
 	    <!-- form -->
 		<div class="col-md-6">
 		<legend><?= ((isset($_GET["edit"])) ? "Edit" : "Add A"); ?> Category</legend><hr>
@@ -113,7 +113,7 @@
 				</div>
 		    </form>
 		</div>
-		
+
 		<!-- category table -->
 		<div class="col-md-6">
 			<table class=" table table-bordered">
@@ -126,7 +126,7 @@
 				<?php
 				    $sql = "select * from categories where parent =0;";
 	                $result = mysqli_query($conn, $sql);
-      				while($data = mysqli_fetch_assoc($result)):				
+      				while($data = mysqli_fetch_assoc($result)):
 				    $parent_id = (int)$data["id"];
 					$sql1 = "select * from categories where parent  = '$parent_id';";
 					$result1 = mysqli_query($conn, $sql1);
@@ -145,7 +145,7 @@
 						    <a href="categories.php?delete=<?php echo $data1["id"]; ?>" class="btn btn-xs btn-default btn-danger"><span class="glyphicon glyphicon-trash"></span></a></td>
 					</tr>
 					<?php endwhile; ?>
-				<?php endwhile; ?>	
+				<?php endwhile; ?>
 				</tbody>
 			</table>
 		</div>

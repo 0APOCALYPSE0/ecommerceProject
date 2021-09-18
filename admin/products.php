@@ -1,25 +1,25 @@
 <?php
-    require_once $_SERVER["DOCUMENT_ROOT"]."/MyPhpFolder/ecommerceProject/core/db.php";
+  require_once $_SERVER["DOCUMENT_ROOT"]."/ecommerceProject/core/db.php";
 	include "includes/header.php";
 	include "includes/navigation.php";
 	if(!is_logged_in()){
 		login_error_redirect();
 	}
-	
+
 	//backend code ===
-	
+
 	//deleted product...
 	if(isset($_GET["delete"])){
 		$delete_id = sanitize($_GET["delete"]);
-		$deleteSql = "delete from products where id= '$delete_id';";
+		$deleteSql = "update products set deleted = 1 where id= '$delete_id';";
 		$deleteResult = mysqli_query($conn, $deleteSql);
 	    header("Location: products.php");
 	}
-	
-	if(isset($_GET["add"])  || isset($_GET["edit"])){ 
-	    $brandSql = "select * from brand order by brand;";
+
+	if(isset($_GET["add"])  || isset($_GET["edit"])){
+	  $brandSql = "select * from brand order by brand;";
 		$pcategory = "select * from categories where parent=0 order by category;";
-	    $brandResult = mysqli_query($conn, $brandSql);
+	  $brandResult = mysqli_query($conn, $brandSql);
 		$pResult = mysqli_query($conn, $pcategory);
 		$title = ((isset($_POST["title"]) && $_POST["title"] != '') ? sanitize($_POST['title']) : "");
 		$brand = ((isset($_POST["brand"]) && $_POST["brand"] != '') ? sanitize($_POST['brand']) : "");
@@ -31,7 +31,7 @@
 		$sizes = ((isset($_POST["sizes"]) && $_POST["sizes"] != '') ? sanitize($_POST['sizes']) : "");
 		$sizes = rtrim($sizes, ',');
 		$saved_image ="";
-		
+
 		if(isset($_GET["edit"])){
 			$edit_id = (int)$_GET["edit"];
 			$productSql = "select * from products where id='$edit_id';";
@@ -62,7 +62,7 @@
 			$sizes = rtrim($sizes, ',');
 			$saved_image = (($product["image"] != '') ? $product["image"] : "");
 			$dbPath = $saved_image;
-			
+
 		}
 		if(!empty($sizes)){
 				$sizeString = sanitize($sizes);
@@ -80,9 +80,9 @@
 			}else{
 			$sizesArray = array();
 		    }
-	
+
 		if($_POST){
-			
+
 			$errors = array();
 			$required = array('title', 'brand', 'price', 'category', 'subcategory', 'sizes');
 			$allowed = array('png', 'jpeg', 'jpg', 'gif');
@@ -111,7 +111,7 @@
 					if($i != 0){
 						$dbPath .= ",";
 					}
-					$dbPath .= "/MyPhpFolder/ecommerceProject/images/products/".$uploadName;
+					$dbPath .= "/ecommerceProject/images/products/".$uploadName;
 					if($mimeType != "image"){
 						$errors[] = "The file must be an image.";
 					}
@@ -124,9 +124,9 @@
 					if($fileExt != $mimeExt && ($mimeExt == 'jpeg' && $fileExt != 'jpg')){
 						$errors[] = "File extension does not match the file.";
 					}
-			    }	
+			    }
 			}
-			//display error if present otherwise update database... 
+			//display error if present otherwise update database...
 			if(!empty($errors)){
 				echo display_error($errors);
 			}else{
@@ -141,7 +141,7 @@
 					$insertSql = "update products set title='$title', price='$price', list_price='$list_price', brand='$brand', categories='$subcategory', image='$dbPath', description='$description', sizes='$sizes' where id = '$edit_id';";
 				}
                 $insertResult = mysqli_query($conn, $insertSql);
-                header("Location: products.php");				
+                header("Location: products.php");
 			}
 		}
 	?>
@@ -181,7 +181,7 @@
             <div class="form-group col-md-3">
 			    <label for="list_price">List Price</label>
 				<input type="text" name="list_price" class="form-control" id="list_price" value="<?=$list_price;?>">
-			</div>	
+			</div>
             <div class="form-group col-md-3">
 			    <label for="">Quantity & Sizes</label>
 				<button class="btn btn-default form-control" onclick="$('#sizeModal').modal('toggle');return false;">Quantity & Sizes</button>
@@ -189,10 +189,10 @@
             <div class="form-group col-md-3">
 			    <label for="sizes">Sizes & Qty Preview</label>
 				<input type="text" name="sizes" class="form-control" id="sizes" value="<?=$sizes;?>" readonly>
-			</div>		
+			</div>
             <div class="form-group col-md-6">
 			    <?php if($saved_image != ""): ?>
-				<?php 
+				<?php
 				    $imgi = 1;
 					$images = explode(',',$saved_image);
 				?>
@@ -201,15 +201,15 @@
 					    <img src="<?=$image;?>" alt="saved-image"/><br>
 						<a href="products.php?delete_image=1&edit=<?=$edit_id?>&imgi=<?=$imgi;?>" class="text-danger">Delete</a>
 					</div>
-					
+
 				<?php
 				$imgi++;
-				endforeach; ?>	
+				endforeach; ?>
 				<?php else: ?>
 			    <label for="image">Image</label>
 				<input type="file" name="image[]" class="form-control" id="image" multiple>
 				<?php endif; ?>
-			</div>	
+			</div>
             <div class="form-group col-md-6">
 			    <label for="description">Description</label>
 				<textarea name="description" class="form-control" id="description" rows="6"><?=$description;?></textarea>
@@ -217,7 +217,7 @@
 			<div class="col-md-3 pull-right">
 			    <a href="products.php" class="btn btn-default">Cancel</a>
                 <input type="submit" class="btn btn-success" value="<?=((isset($_GET["edit"])) ? "Edit" : "Add")?> Product">
-            </div><div class="clearfix"></div>				
+            </div><div class="clearfix"></div>
 		</form>
 		<!-- Modal -->
 		<div id="sizeModal" class="modal fade" role="dialog">
@@ -282,8 +282,8 @@
 			<th>Sold</th>
 		</thead>
 		<tbody>
-		<?php while($data = mysqli_fetch_assoc($result)): 
-		    $childID = $data["categories"];
+		<?php while($data = mysqli_fetch_assoc($result)):
+		  $childID = $data["categories"];
 			$catSql = "select * from categories where id ='$childID';";
 			$catResult = mysqli_query($conn, $catSql);
 			$subcat = mysqli_fetch_assoc($catResult);
@@ -300,20 +300,20 @@
 		    	<td><?= money($data["price"]);?></td>
 		    	<td><?= $category;?></td>
 		    	<td><a href="products.php?featured=<?=(($data["featured"] == 0) ? "1" : "0" );?>&id=<?=$data["id"];?>" class="btn btn-xs btn-default">
-				<span class="glyphicon glyphicon-<?=(($data["featured"] == 1) ? "minus" : "plus");?>"></span>
-				</a>&nbsp<?=(($data["featured"] == 1) ? " Featured Product" : "");?></td>
+						<span class="glyphicon glyphicon-<?=(($data["featured"] == 1) ? "minus" : "plus");?>"></span>
+						</a>&nbsp;<?= (($data["featured"] == 1) ? " Featured Product" : ""); ?></td>
 		    	<td><?=$data["deleted"];?></td>
 		    </tr>
 		<?php endwhile; ?>
 		</tbody>
 	</table>
-	
+
 <?php
     }
     include "includes/footer.php";
 ?>
 <Script>
-    $("document").ready(function(){
-		get_sub_category("<?=$subcategory;?>");
+	$("document").ready(function(){
+		get_sub_category("<?=isset($subcategory) ? $subcategory : '';?>");
 	});
 </script>

@@ -4,7 +4,7 @@
 
 
 <?php
-        require_once $_SERVER['DOCUMENT_ROOT']."/MyPhpFolder/ecommerceProject/core/db.php";
+        require_once $_SERVER['DOCUMENT_ROOT']."/ecommerceProject/core/db.php";
        	$sql = "select * from cat where parent =0;";
 	    $result = mysqli_query($conn, $sql);
 		$grandparent = ((isset($_POST["grandparent"]) && $_POST["grandparent"] != '') ? sanitize($_POST['grandparent']) : "");
@@ -58,7 +58,7 @@
 				</div>
 		    </form>
 		</div>
-		
+
 <Script>
     function get_sub_category(selected){
 		if(typeof selected === "undefined"){
@@ -66,7 +66,7 @@
 		}
 		var parentID = $("#grandparent").val();
 		jQuery.ajax({
-			url : "/MyPhpFolder/ecommerceProject/admin/add1.php",
+			url : "/ecommerceProject/admin/add1.php",
 			type : "POST",
 			data : {parentID : parentID, selected : selected},
 			success : function(data){
@@ -75,12 +75,12 @@
 			error : function(){
 				alert("Something went wrong with the sub category option!");
 			}
-		});			
+		});
 	}
 	$("select[name='grandparent']").change(function(){
 		get_sub_category();
 	});
-      
+
     $("document").ready(function(){
 		get_sub_category("<?=$parent;?>");
 	});

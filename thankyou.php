@@ -1,8 +1,8 @@
 <?php
 
-    require_once "core/db.php";   	
-	
-	
+    require_once "core/db.php";
+
+
 	// Set your secret key: remember to change this to your live secret key in production
 	// See your keys here: https://dashboard.stripe.com/account/apikeys
 	\Stripe\Stripe::setApiKey(STRIPE_PRIVATE);
@@ -10,7 +10,7 @@
 	// Token is created using Checkout or Elements!
 	// Get the payment token ID submitted by the form:
 	$token = $_POST['stripeToken'];
-	
+
 	//get the rest of the post data...
 	$full_name = sanitize($_POST["full_name"]);
 	$email = sanitize($_POST["email"]);
@@ -27,7 +27,7 @@
 	$description = sanitize($_POST["description"]);
 	$charge_amount = number_format($grand_total,2)*100;
 	$metadata = array(
-	    "cart_id"   =>  $cart_id,
+	  "cart_id"   =>  $cart_id,
 		"tax"   =>  $tax,
 		"sub_total"   =>  $sub_total,
 	);
@@ -40,7 +40,7 @@
 		'receipt_email' => $email,
 		'metadata' => $metadata
 	]);
-	
+
 	//adjust inventory...
 	$itemQ = $conn->query("select * from cart where id = '$cart_id';");
 	$iresults = mysqli_fetch_assoc($itemQ);
@@ -54,19 +54,19 @@
 		foreach($sizes as $size){
 			if($size["size"] == $item["size"]){
 				$q = $size["quantity"] - $item["quantity"];
-				$newSizes[] = array("size" => $size["size"], "quantity" => $q);
+				$newSizes[] = array("size" => $size["size"], "quantity" => $q, "threshold" => $size['threshold']);
 			} else {
-				$newSizes[] = array("size" => $size["size"], "quantity" => $size["quantity"]);
+				$newSizes[] = array("size" => $size["size"], "quantity" => $size["quantity"], "threshold" => $size['threshold']);
 			}
 		}
 		$sizeString = sizesToString($newSizes);
 		$conn->query("update products set sizes = '$sizeString' where id = '$item_id';");
 	}
-	
+
 	//update cart...
 	$conn->query("update cart set paid = 1 where id = '$cart_id';");
 	$conn->query("insert into transactions (charge_id, cart_id, full_name, email, street, street2, city, state, zip_code, country, sub_total, tax, grand_total, description, txn_type) values('$charge->id', '$cart_id', '$full_name', '$email', '$street', '$street2', '$city', '$state', '$zip_code', '$country', '$sub_total', '$tax', '$grand_total', '$description', '$charge->object')");
-	
+
 	$domain = ($_SERVER["HTTP_HOST"] != "localhost") ? '.'.$_SERVER["HTTP_HOST"] : false;
 	setcookie(CART_COOKIE, '', 1, "/", $domain, false);
 	include "includes/head.php";
@@ -75,7 +75,7 @@
 
 ?>
 
-    <h1 class="text-center text-success">Thank You!</h1>
+  <h1 class="text-center text-success">Thank You!</h1>
 	<p> Your card has been successfully charged <?=money($grand_total);?>. You have been emailed a receipt. Please check your spam folder if it is not in your inbox. Additionally you can print this page as a receipt.</p>
 	<p> Your receipt number is: <strong><?=$cart_id;?></strong></p>
 	<p> Your order will be shipped to the address below.</p>

@@ -1,11 +1,11 @@
 </div><!-- row -->
 	</div><br><br><!--container-fluid-->
-	
+
 	<!-- footer -->
 	<footer class="col-md-12 text-center" id="footer">
 	    &copy; Copyright 2018 Shaunta's Boutique
 	</footer><!-- footer -->
-	
+
 	<script>
 	    function updateSizes(){
 			var stringSizes = "";
@@ -16,14 +16,14 @@
 			}
 			$("#sizes").val(stringSizes);
 		}
-	
+
 	    function get_sub_category(selected){
-			if(typeof selected === "undefined"){
-				var selected ="";
-			}
+				if(typeof selected === "undefined"){
+					var selected ="";
+				}
 		    var parentID = $("#category").val();
-            jQuery.ajax({
-				url : "/MyPhpFolder/ecommerceProject/admin/parsers/sub_category.php",
+        jQuery.ajax({
+				url : "/ecommerceProject/admin/parsers/sub_category.php",
 				type : "POST",
 				data : {parentID : parentID, selected : selected},
 				success : function(data){
@@ -32,9 +32,12 @@
 				error : function(){
 					alert("Something went wrong with the sub category option!");
 				}
-			});			
+			});
 		}
-		$("select[name='category']").change(function(){
+		// $("select[name='category']").change(function(){
+		// 	get_sub_category();
+		// });
+		$("select[name='category']").change(function () {
 			get_sub_category();
 		});
 	</script>

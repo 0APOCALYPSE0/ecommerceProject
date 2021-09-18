@@ -3,7 +3,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <?php
-    require_once $_SERVER["DOCUMENT_ROOT"]."/MyPhpFolder/ecommerceProject/core/db.php";
+    require_once $_SERVER["DOCUMENT_ROOT"]."/ecommerceProject/core/db.php";
     $pcategory = "select * from cat where parent=0 order by category;";
     $pResult = mysqli_query($conn, $pcategory);
 	$subcategory = ((isset($_POST["subcategory"]) && $_POST["subcategory"] != '') ? sanitize($_POST['subcategory']) : "");
@@ -31,7 +31,7 @@
 				<select name="subcategory" id="subcategory" class="form-control">
 				</select>
 			</div>
-	
+
 <script>
     function get_category(selected){
 		if(typeof selected === "undefined"){
@@ -39,7 +39,7 @@
 		}
 		var grandparentID = $("#grandcategory").val();
 		jQuery.ajax({
-			url : "/MyPhpFolder/ecommerceProject/admin/rough1.php",
+			url : "/ecommerceProject/admin/rough1.php",
 			type : "POST",
 			data : {grandparentID : grandparentID, selected : selected},
 			success : function(data){
@@ -48,13 +48,13 @@
 			error : function(){
 				alert("Something went wrong with the category option!");
 			}
-		});			
+		});
 	}
 	$("select[name='grandcategory']").change(function(){
 		get_category();
 	});
 </script>
-	
+
 <Script>
     $("document").ready(function(){
 		get_category("<?=$category;?>");
@@ -68,7 +68,7 @@
 		}
 		var parentID = $("#category").val();
 		jQuery.ajax({
-			url : "/MyPhpFolder/ecommerceProject/admin/rough2.php",
+			url : "/ecommerceProject/admin/rough2.php",
 			type : "POST",
 			data : {parentID : parentID, selected : selected},
 			success : function(data){
@@ -77,12 +77,12 @@
 			error : function(){
 				alert("Something went wrong with the sub category option!");
 			}
-		});			
+		});
 	}
 	$("select[name='category']").change(function(){
 		get_sub_category();
 	});
-	
+
     $("document").ready(function(){
 		get_sub_category("<?=$subcategory;?>");
 	});

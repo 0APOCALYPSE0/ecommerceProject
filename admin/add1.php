@@ -1,5 +1,5 @@
 <?php
-    require_once $_SERVER["DOCUMENT_ROOT"]."/MyPhpFolder/ecommerceProject/core/db.php";
+    require_once $_SERVER["DOCUMENT_ROOT"]."/ecommerceProject/core/db.php";
 	$parentID = (int)$_POST["parentID"];
 	$selected = $_POST["selected"];
 	$subSql = "select * from cat where parent = '$parentID' order by category;";

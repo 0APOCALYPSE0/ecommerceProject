@@ -2,7 +2,7 @@
     require_once "../core/db.php";
 	include "includes/header.php";
 	include "includes/navigation.php";
-	
+
 	if(!is_logged_in()){
 		header("Location: login.php");
 	}
@@ -15,8 +15,8 @@
 				 on t.cart_id = c.id
 				 where c.paid = 1 and c.shipped = 0
 				 order by t.txn_date";
-	$txnResults = $conn->query($txnQuery);			 
-?>     
+	$txnResults = $conn->query($txnQuery);
+?>
 	<div class="col-md-12">
 		<h3 class="text-center">Orders To Ship</h3>
 		<table class="table table-condensed table-bordered table-stripped">
@@ -28,19 +28,23 @@
 				<th>Date</th>
 			</thead>
 			<tbody>
-			<?php while($order = mysqli_fetch_assoc($txnResults)): ?>
-				<tr>
-					<td><a href="orders.php?txn_id=<?=$order['id'];?>" class="btn btn-xs btn-info">Details</a></td>
-					<td><?=$order["full_name"];?></td>
-					<td><?=$order["description"];?></td>
-					<td><?=money($order["grand_total"]);?></td>
-					<td><?=pretty_date($order["txn_date"]);?></td>
-				</tr>
-			<?php endwhile; ?>	
+			<?php
+			if(mysqli_num_rows($txnResults) > 0){
+				while($order = mysqli_fetch_assoc($txnResults)): ?>
+					<tr>
+						<td><a href="orders.php?txn_id=<?=$order['id'];?>" class="btn btn-xs btn-info">Details</a></td>
+						<td><?=$order["full_name"];?></td>
+						<td><?=$order["description"];?></td>
+						<td><?=money($order["grand_total"]);?></td>
+						<td><?=pretty_date($order["txn_date"]);?></td>
+					</tr>
+				<?php endwhile;
+			}
+			?>
 			</tbody>
 		</table>
 	</div>
-	 
+
 	<div class="row">
 	    <!-- sales by month -->
 		<?php
@@ -78,7 +82,7 @@
 					<th>Months</th>
 					<th><?=$lastYr;?></th>
 					<th><?=$thisYr;?></th>
-				</thead>	
+				</thead>
 				<tbody>
 				<?php
 				    for($i=1; $i<=12; $i++){
@@ -89,16 +93,16 @@
 						<td><?=(array_key_exists($i,$last)) ? money($last[$i]) : money(0);?></td>
 						<td><?=(array_key_exists($i,$current)) ? money($current[$i]) : money(0);?></td>
 					</tr>
-				<?php }?>	
+				<?php }?>
 				    <tr Style="background-color:#e6fff2;">
 				    	<td>Total</td>
 				    	<td><?=money($lastTotal);?></td>
 				    	<td><?=money($currentTotal);?></td>
 				    </tr>
 				</tbody>
-			</table>			
+			</table>
 		</div>
-		
+
 		<!-- Inventory -->
 		<?php
 		    $iQuery = $conn->query("select * from products where deleted = 0");
@@ -140,11 +144,11 @@
 						<td><?=$item["quantity"];?></td>
 						<td><?=$item["threshold"];?></td>
 					</tr>
-				<?php endforeach; ?>	
+				<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
-	</div> 
+	</div>
 <?php
     include "includes/footer.php";
 ?>

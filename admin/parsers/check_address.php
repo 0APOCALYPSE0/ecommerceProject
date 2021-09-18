@@ -1,5 +1,5 @@
 <?php
-    require_once $_SERVER["DOCUMENT_ROOT"]."/MyPhpFolder/ecommerceProject/core/db.php";
+    require_once $_SERVER["DOCUMENT_ROOT"]."/ecommerceProject/core/db.php";
 	$name = sanitize($_POST["full_name"]);
 	$email = sanitize($_POST["email"]);
 	$street = sanitize($_POST["street"]);
@@ -18,7 +18,7 @@
 		"zip_code"    =>  "Zip Code",
 		"country"     =>  "Country",
 	);
-	
+
 	//check if all required fields are filled out....
 	foreach($required as $f => $d){
 		if(empty($_POST[$f]) || $_POST[$f] == ""){
@@ -29,12 +29,12 @@
 	if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
 		$errors[] = "Please enter a valid email.";
 	}
-	
+
 	//check zip code is valid or not...
 	if(!preg_match('/^[0-9]{6}$/', $zip_code)){
         $errors[] = "Please enter a valid zip code.";
 	}
-	
+
 	if(!empty($errors)){
 		echo display_error($errors);
 	}else{
